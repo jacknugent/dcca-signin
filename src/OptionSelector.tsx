@@ -6,7 +6,7 @@ interface Props {
 
 export default function OptionSelector({ onSelect }: Props) {
   const buttonStyle = {
-    height: "5rem",
+    height: "40vh",
     fontSize: "1.5rem",
     fontWeight: 600,
   };

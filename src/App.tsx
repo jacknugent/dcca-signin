@@ -11,13 +11,6 @@ function App() {
   return (
     <Container size="sm" py="xl">
       <Stack gap="md">
-        <Center>
-          {membership === null && (
-            <Title order={1} size="h2">
-              DCCA Sign-In
-            </Title>
-          )}
-        </Center>
         {membership === null ? (
           <OptionSelector onSelect={setMembership} />
         ) : (
