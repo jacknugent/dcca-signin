@@ -62,6 +62,7 @@ export default function SignInForm({ membership, onReset }: Props) {
           <TextInput
             size="lg"
             label="Email Address"
+            type="email"
             placeholder="Enter your email"
             {...form.getInputProps("email")}
           />
