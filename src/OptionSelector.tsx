@@ -6,15 +6,15 @@ interface Props {
 
 export default function OptionSelector({ onSelect }: Props) {
   const buttonStyle = {
-    height: "10rem",
-    fontSize: "3rem",
+    height: "5rem",
+    fontSize: "1.5rem",
     fontWeight: 600,
   };
 
   return (
     <Stack gap="md" align="stretch">
       <Button fullWidth style={buttonStyle} onClick={() => onSelect("member")}>
-        I am a member
+        <div style={{ whiteSpace: "normal" }}>I am a member</div>
       </Button>
       <Button
         fullWidth
@@ -22,7 +22,7 @@ export default function OptionSelector({ onSelect }: Props) {
         style={buttonStyle}
         onClick={() => onSelect("non-member")}
       >
-        I am not a member
+        <div style={{ whiteSpace: "normal" }}>I am not a member</div>
       </Button>
     </Stack>
   );
