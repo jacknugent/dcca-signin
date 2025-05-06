@@ -1,35 +1,34 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import { Container, Stack, Title, Center, Text } from "@mantine/core";
+import OptionSelector from "./OptionSelector.tsx";
+import SignInForm from "./SignInForm.tsx";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [membership, setMembership] = useState<"member" | "non-member" | null>(
+    null
+  );
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Container size="sm" py="xl">
+      <Stack gap="md">
+        <Center>
+          {membership === null && (
+            <Title order={1} size="h2">
+              DCCA Sign-In
+            </Title>
+          )}
+        </Center>
+        {membership === null ? (
+          <OptionSelector onSelect={setMembership} />
+        ) : (
+          <SignInForm
+            membership={membership}
+            onReset={() => setMembership(null)}
+          />
+        )}
+      </Stack>
+    </Container>
+  );
 }
 
-export default App
+export default App;
