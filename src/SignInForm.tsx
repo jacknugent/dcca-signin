@@ -32,14 +32,37 @@ export default function SignInForm({ membership, onReset }: Props) {
     firstNameRef.current?.focus();
   }, []);
 
-  const handleSubmit = (values: typeof form.values) => {
-    console.log("Form submitted:", values);
-    setSubmitted(true);
-    form.reset();
-    setTimeout(() => {
-      setSubmitted(false);
-      onReset();
-    }, 2000);
+  const handleSubmit = async (values: typeof form.values) => {
+    const payload = {
+      firstName: values.firstName,
+      lastName: values.lastName,
+      email: values.email,
+      membership,
+    };
+
+    try {
+      await fetch(
+        "https://script.google.com/macros/s/AKfycbzGPrJSeVpwPw6kbFjv_zV3gytAhEoTIigeEwWkv-2dzd3aL5oazQNFO3DFaZnaRzgh/exec",
+        {
+          method: "POST",
+          body: JSON.stringify(payload),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log("Submitted to Google Sheets:", payload);
+      setSubmitted(true);
+      form.reset();
+      setTimeout(() => {
+        setSubmitted(false);
+        onReset();
+      }, 2000);
+    } catch (error) {
+      console.error("Error submitting to Google Sheets:", error);
+      alert("There was a problem submitting your sign-in. Please try again.");
+    }
   };
 
   return (
