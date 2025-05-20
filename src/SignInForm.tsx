@@ -9,6 +9,7 @@ interface Props {
 
 export default function SignInForm({ membership, onReset }: Props) {
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
   const firstNameRef = useRef<HTMLInputElement>(null);
 
   const form = useForm({
@@ -33,33 +34,37 @@ export default function SignInForm({ membership, onReset }: Props) {
   }, []);
 
   const handleSubmit = async (values: typeof form.values) => {
-    const payload = {
+    const formData = new URLSearchParams({
       firstName: values.firstName,
       lastName: values.lastName,
       email: values.email,
-      membership,
-    };
+      member: membership === "member" ? "true" : "false",
+    });
 
     try {
+      setLoading(true);
       await fetch(
-        "https://script.google.com/macros/s/AKfycbzGPrJSeVpwPw6kbFjv_zV3gytAhEoTIigeEwWkv-2dzd3aL5oazQNFO3DFaZnaRzgh/exec",
+        "https://script.google.com/macros/s/AKfycbwtud45V77J9vy-kGhgtzrjLLxVcMghX1Y_USkc2GvxhEvCJGiYrOi90Ee1BqWmtgfOiA/exec",
         {
           method: "POST",
-          body: JSON.stringify(payload),
+          body: formData.toString(),
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "application/x-www-form-urlencoded",
           },
         }
       );
 
-      console.log("Submitted to Google Sheets:", payload);
+      console.log("Submitted to Google Sheets:", Object.fromEntries(formData));
       setSubmitted(true);
+      setLoading(false);
       form.reset();
       setTimeout(() => {
         setSubmitted(false);
         onReset();
       }, 2000);
     } catch (error) {
+      setLoading(false);
+
       console.error("Error submitting to Google Sheets:", error);
       alert("There was a problem submitting your sign-in. Please try again.");
     }
@@ -73,12 +78,14 @@ export default function SignInForm({ membership, onReset }: Props) {
           label="First Name"
           placeholder="Enter your first name"
           {...form.getInputProps("firstName")}
+          disabled={loading || submitted}
           ref={firstNameRef}
         />
         <TextInput
           size="lg"
           label="Last Name"
           placeholder="Enter your last name"
+          disabled={loading || submitted}
           {...form.getInputProps("lastName")}
         />
         {membership === "non-member" && (
@@ -87,11 +94,12 @@ export default function SignInForm({ membership, onReset }: Props) {
             label="Email Address"
             type="email"
             placeholder="Enter your email"
+            disabled={loading || submitted}
             {...form.getInputProps("email")}
           />
         )}
         <Group mt="md">
-          <Button type="submit" size="md">
+          <Button type="submit" size="md" loading={loading}>
             Sign In
           </Button>
           <Button variant="subtle" onClick={onReset}>
