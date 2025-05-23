@@ -12,7 +12,7 @@ export default function BecomeAMember({ backToMainPage }: Props) {
   return (
     <Stack gap="md" align="stretch">
       <Text size="xl" style={{ textAlign: "center" }}>
-        Speak to a Board member to sign up!!!
+        Speak to a Board member to sign up!
       </Text>
     </Stack>
   );
