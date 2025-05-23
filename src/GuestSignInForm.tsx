@@ -1,13 +1,13 @@
 import { useForm } from "@mantine/form";
-import { TextInput, Button, Stack, Alert, Group, Text } from "@mantine/core";
+import { TextInput, Button, Stack, Alert, Group } from "@mantine/core";
 import { useRef, useEffect, useState } from "react";
+import { postSignIn } from "./helper";
 
 interface Props {
-  membership: "member" | "non-member";
   onReset: () => void;
 }
 
-export default function SignInForm({ membership, onReset }: Props) {
+export default function GuestSignInForm({ onReset }: Props) {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const firstNameRef = useRef<HTMLInputElement>(null);
@@ -22,10 +22,7 @@ export default function SignInForm({ membership, onReset }: Props) {
     validate: {
       firstName: (v) => (!v ? "First name is required" : null),
       lastName: (v) => (!v ? "Last name is required" : null),
-      email: (v) =>
-        membership === "non-member" && !v
-          ? "Email is required for non-members"
-          : null,
+      email: (v) => (!v ? "Email is required for non-members" : null),
     },
   });
 
@@ -34,27 +31,14 @@ export default function SignInForm({ membership, onReset }: Props) {
   }, []);
 
   const handleSubmit = async (values: typeof form.values) => {
-    const formData = new URLSearchParams({
-      firstName: values.firstName,
-      lastName: values.lastName,
-      email: values.email,
-      member: membership === "member" ? "true" : "false",
-    });
-
     try {
       setLoading(true);
-      await fetch(
-        "https://script.google.com/macros/s/AKfycbwtud45V77J9vy-kGhgtzrjLLxVcMghX1Y_USkc2GvxhEvCJGiYrOi90Ee1BqWmtgfOiA/exec",
-        {
-          method: "POST",
-          body: formData.toString(),
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-        }
-      );
-
-      console.log("Submitted to Google Sheets:", Object.fromEntries(formData));
+      await postSignIn({
+        firstName: values.firstName,
+        lastName: values.lastName,
+        email: values.email,
+        member: "false",
+      });
       setSubmitted(true);
       setLoading(false);
       form.reset();
@@ -88,16 +72,15 @@ export default function SignInForm({ membership, onReset }: Props) {
           disabled={loading || submitted}
           {...form.getInputProps("lastName")}
         />
-        {membership === "non-member" && (
-          <TextInput
-            size="lg"
-            label="Email Address"
-            type="email"
-            placeholder="Enter your email"
-            disabled={loading || submitted}
-            {...form.getInputProps("email")}
-          />
-        )}
+        <TextInput
+          size="lg"
+          label="Email Address"
+          type="email"
+          placeholder="Enter your email"
+          disabled={loading || submitted}
+          {...form.getInputProps("email")}
+        />
+
         <Group mt="md">
           <Button type="submit" size="md" loading={loading}>
             Sign In

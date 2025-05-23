@@ -1,7 +1,7 @@
 import { Button, Stack } from "@mantine/core";
 
 interface Props {
-  onSelect: (type: "member" | "non-member") => void;
+  onSelect: (type: "member" | "non-member-prompt") => void;
 }
 
 export default function OptionSelector({ onSelect }: Props) {
@@ -20,7 +20,7 @@ export default function OptionSelector({ onSelect }: Props) {
         fullWidth
         variant="outline"
         style={buttonStyle}
-        onClick={() => onSelect("non-member")}
+        onClick={() => onSelect("non-member-prompt")}
       >
         <div style={{ whiteSpace: "normal" }}>I am not a member</div>
       </Button>

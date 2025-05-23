@@ -6,7 +6,10 @@ import {
   createTheme,
   defaultCssVariablesResolver,
 } from "@mantine/core";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "@mantine/core/styles.css";
+
+const queryClient = new QueryClient();
 
 const theme = createTheme({});
 
@@ -17,7 +20,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       cssVariablesResolver={defaultCssVariablesResolver}
       defaultColorScheme="dark"
     >
-      <App />
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
     </MantineProvider>
   </React.StrictMode>
 );

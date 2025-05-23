@@ -1,23 +1,34 @@
 import { useState } from "react";
-import { Container, Stack, Title, Center, Text } from "@mantine/core";
+import { Container, Stack } from "@mantine/core";
 import OptionSelector from "./OptionSelector.tsx";
-import SignInForm from "./SignInForm.tsx";
+import { useWildApricotContacts } from "./hooks/index.ts";
+import SignUpAsk from "./SignUpAsk.tsx";
+import MemberSignInForm from "./MemberSignInForm.tsx";
+import BecomeAMember from "./BecomeAMember.tsx";
+import GuestSignInForm from "./GuestSignInForm.tsx";
 
 function App() {
-  const [membership, setMembership] = useState<"member" | "non-member" | null>(
-    null
-  );
+  const [membership, setMembership] = useState<
+    "member" | "non-member-prompt" | "become-member" | "guest" | null
+  >(null);
+  const { data } = useWildApricotContacts();
 
   return (
     <Container size="sm" py="xl">
       <Stack gap="md">
         {membership === null ? (
           <OptionSelector onSelect={setMembership} />
-        ) : (
-          <SignInForm
-            membership={membership}
+        ) : membership === "non-member-prompt" ? (
+          <SignUpAsk onSelect={setMembership} />
+        ) : membership === "member" ? (
+          <MemberSignInForm
+            members={data?.Contacts}
             onReset={() => setMembership(null)}
           />
+        ) : membership === "become-member" ? (
+          <BecomeAMember backToMainPage={() => setMembership(null)} />
+        ) : (
+          <GuestSignInForm onReset={() => setMembership(null)} />
         )}
       </Stack>
     </Container>
