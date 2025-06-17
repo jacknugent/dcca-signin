@@ -14,7 +14,7 @@ function App() {
   const { data } = useWildApricotContacts();
 
   return (
-    <Container size="sm" py="xl">
+    <Container size="lg" py="xl">
       <Stack gap="md">
         {membership === null ? (
           <OptionSelector onSelect={setMembership} />

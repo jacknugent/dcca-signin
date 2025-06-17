@@ -1,4 +1,4 @@
-import { Button, Stack, Alert, Group, Select } from "@mantine/core";
+import { Button, Stack, Alert, Group, Select, type ComboboxItem, type OptionsFilter } from "@mantine/core";
 import { useState, type FormEvent } from "react";
 import type { Contact } from "./hooks/useWildApricotContacts";
 import { postSignIn } from "./helper";
@@ -50,6 +50,17 @@ export default function MemberSignInForm({ members, onReset }: Props) {
     (member) => !seen.has(member.DisplayName) && seen.add(member.DisplayName)
   );
 
+  const optionsFilter: OptionsFilter = ({ options, search }) => {
+    const searchWords = search.toLowerCase().trim().split(/\s+/);
+
+    return (options as ComboboxItem[]).filter((option) => {
+      const labelWords = option.label.toLowerCase().trim().split(/\s+/);
+      return searchWords.every((searchWord) =>
+        labelWords.some((word) => word.includes(searchWord))
+      );
+    });
+  };
+
   return (
     <form onSubmit={handleSubmit}>
       <Stack gap="md">
@@ -62,13 +73,15 @@ export default function MemberSignInForm({ members, onReset }: Props) {
             data={
               !search
                 ? []
-                : uniqueMembers?.map(
-                    (member) => `${member.LastName}, ${member.FirstName}`
-                  )
+                : uniqueMembers?.map((member) => {
+                    const label = `${member.LastName}, ${member.FirstName}`;
+                    return { label, value: label };
+                  })
             }
             limit={3}
             size="xl"
             searchable
+            filter={optionsFilter}
             onSearchChange={(search) => {
               if (!search) {
                 setValue(search);
