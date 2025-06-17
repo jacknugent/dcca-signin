@@ -1,4 +1,4 @@
-import { Button, Stack, Alert, Group, Select, type ComboboxItem, type OptionsFilter } from "@mantine/core";
+import { Button, Stack, Alert, Group, Select, Text, type ComboboxItem, type OptionsFilter } from "@mantine/core";
 import { useState, type FormEvent } from "react";
 import type { Contact } from "./hooks/useWildApricotContacts";
 import { postSignIn } from "./helper";
@@ -63,6 +63,7 @@ export default function MemberSignInForm({ members, onReset }: Props) {
 
   return (
     <form onSubmit={handleSubmit}>
+      <h1>Member Sign-in</h1>
       <Stack gap="md">
         {!uniqueMembers ? (
           <div>Loading members...</div>

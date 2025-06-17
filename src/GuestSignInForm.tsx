@@ -56,6 +56,7 @@ export default function GuestSignInForm({ onReset }: Props) {
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
+      <h1>Guest Sign-in</h1>
       <Stack gap="md">
         <TextInput
           size="lg"
